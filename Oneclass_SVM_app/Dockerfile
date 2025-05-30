@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application files
 COPY ocsvm_ntk_traffic_anomaly.py .
 COPY ocsvm_ntk_traffic_fastapi.py .
-COPY model/ model/
+COPY output/ output/
 
 # Train the model on build (optional)
 RUN python ocsvm_ntk_traffic_anomaly.py
