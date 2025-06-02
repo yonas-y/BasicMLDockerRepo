@@ -1,34 +1,30 @@
-# fastapi.py
-from fastapi import FastAPI, HTTPException
+"""
+FastAPI implementation for the OCSVM network traffic anomaly detector!
+"""
+
+# ocsvm_ntk_traffic_fastapi.py
+
+from fastapi import FastAPI, Query
 from pydantic import BaseModel
-import joblib
 import numpy as np
-import os
-from sklearn.svm import OneClassSVM
-from sklearn.preprocessing import StandardScaler
-from sklearn.datasets import fetch_covtype
+import joblib
+from ocsvm_ntk_traffic_anomaly import train_ocsvm_model
 
 app = FastAPI(title="OCSVM Anomaly Detection API")
 
-# Global variables for the model and scaler
-model = None
-scaler = None
+def load_model():
+    return joblib.load("output/ocsvm_ntk_traffic_anomaly_d_model.pkl")
 
-MODEL_PATH = "output/ocsvm_ntk_traffic_anomaly_d_model.pkl"
-SCALER_PATH = "output/scaler.pkl"
+def load_scaler():
+    return joblib.load("output/scaler.pkl")
 
 # Load model and scaler
-def load_model():
-    global model, scaler
-    model = joblib.load(MODEL_PATH)
-    scaler = joblib.load(SCALER_PATH)
-
-# Initial load
-load_model()
+model = load_model()
+scaler = load_scaler()
 
 # Request schema
-class Features(BaseModel):
-    data: list
+class InferenceInput(BaseModel):
+    features: list
 
 @app.post("/predict/")
 def predict(features: Features):
@@ -41,29 +37,14 @@ def predict(features: Features):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/retrain/")
-def retrain():
+def retrain(data_fraction: float= Query(1.0, ge=0.01, le=1.0)):
     try:
-        # Load and prepare new training data
-        X, y = fetch_covtype(return_X_y=True)
-        X = X[:10000]
-        y = y[:10000]
-        X_train = X[y == 2]  # Assume class 2 is normal
-
-        # Retrain
-        new_scaler = StandardScaler()
-        X_train_scaled = new_scaler.fit_transform(X_train)
-
-        new_model = OneClassSVM(kernel="rbf", nu=0.05, gamma='scale')
-        new_model.fit(X_train_scaled)
-
-        # Save
-        os.makedirs("output", exist_ok=True)
-        joblib.dump(new_model, MODEL_PATH)
-        joblib.dump(new_scaler, SCALER_PATH)
-
-        # Reload in memory
-        load_model()
-
-        return {"status": "Model retrained and reloaded successfully"}
+        global model, scaler
+        model, scaler, metrics = train_ocsvm_model(data_fraction=data_fraction)
+        return {
+            "message": "Model retrained successfully",
+            "data_fraction": data_fraction,
+            "metrics": metrics
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
