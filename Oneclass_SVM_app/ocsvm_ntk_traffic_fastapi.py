@@ -1,7 +1,6 @@
 """
 FastAPI implementation for the OCSVM network traffic anomaly detector!
 """
-
 # ocsvm_ntk_traffic_fastapi.py
 
 from fastapi import FastAPI, Query
@@ -27,7 +26,7 @@ class InferenceInput(BaseModel):
     features: list
 
 @app.post("/predict/")
-def predict(features: Features):
+def predict(features: InferenceInput):
     try:
         X = np.array(features.data).reshape(1, -1)
         X_scaled = scaler.transform(X)
