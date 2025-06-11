@@ -1,7 +1,9 @@
 from pymongo import MongoClient
+import os
 
 # Use host.docker.internal to access MongoDB running on the host
-client = MongoClient("mongodb://host.docker.internal:27017/")
+mongo_uri = os.getenv("MONGO_URI", "mongodb://mongo:27017/")
+client = MongoClient(mongo_uri)
 
 try:
     dbs = client.list_database_names()
