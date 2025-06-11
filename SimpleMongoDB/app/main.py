@@ -1,12 +1,10 @@
-from pymongo import MongoClient
 import os
+from pymongo import MongoClient
 
-# Use host.docker.internal to access MongoDB running on the host
-mongo_uri = os.getenv("MONGO_URI", "mongodb://mongo:27017/")
-client = MongoClient(mongo_uri)
+uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+client = MongoClient(uri)
 
 try:
-    dbs = client.list_database_names()
-    print("✅ Connected to MongoDB. Databases:", dbs)
+    print("✅ MongoDB Databases:", client.list_database_names())
 except Exception as e:
-    print("❌ Failed to connect:", e)
+    print("❌ Connection failed:", e)
