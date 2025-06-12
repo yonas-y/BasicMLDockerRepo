@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+# PyCharm
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
