@@ -2,8 +2,8 @@
 Trains the OCSVM model!
 """
 
-from sklearn.preprocessing import StandardScaler
 from model import create_model, save_model
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report
 import numpy as np
 
