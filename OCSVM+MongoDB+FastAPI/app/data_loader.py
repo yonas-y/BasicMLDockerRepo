@@ -4,7 +4,7 @@ Load the data from database and return it as a pandas dataframe.
 
 import pandas as pd
 from pymongo import MongoClient
-from config import MONGO_URI, DB_NAME, COLLECTION_NAME
+from app.config import MONGO_URI, DB_NAME, COLLECTION_NAME
 
 def load_data():
     client = MongoClient(MONGO_URI)

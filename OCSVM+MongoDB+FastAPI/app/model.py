@@ -5,7 +5,7 @@ Creates, Saves and Loads the Model.
 from sklearn.svm import OneClassSVM
 from sklearn.preprocessing import StandardScaler
 import joblib
-from config import MODEL_PATH, SCALER_PATH, MODEL_DIR
+from app.config import MODEL_PATH, SCALER_PATH, MODEL_DIR
 import os
 
 def create_model():

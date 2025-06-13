@@ -19,7 +19,7 @@ services:
       - .:/app
     environment:
       - PYTHONUNBUFFERED=1
-    command: python app/main.py
+      - PYTHONPATH=/app
 
 volumes:
   mongo_data:
