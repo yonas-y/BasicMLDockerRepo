@@ -10,11 +10,13 @@ def load_data():
     client = MongoClient(MONGO_URI)
 
     try:
-        print("✅ MongoDB Databases:", client.list_database_names())
+        print("✅ Connected to MongoDB Databases:", client.list_database_names())
+        db = client[DB_NAME]
+        collection = db[COLLECTION_NAME]
+        df = pd.DataFrame(list(collection.find()))
+        return df
     except Exception as e:
         print("❌ Connection failed:", e)
+        return None
 
-    db = client[DB_NAME]
-    collection = db[COLLECTION_NAME]
-    documents = list(collection.find())
-    return pd.DataFrame(documents)
+
