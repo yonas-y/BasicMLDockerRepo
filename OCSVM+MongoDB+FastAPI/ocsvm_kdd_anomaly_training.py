@@ -8,13 +8,11 @@ import pandas as pd
 from sklearn.svm import OneClassSVM
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import precision_score, recall_score, f1_score
+from pymongo import MongoClient
 import joblib
 import os
-from pymongo import MongoClient
 
-uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
-client = MongoClient(uri)
-
+client = MongoClient("mongodb://localhost:27017/")
 try:
     print("✅ MongoDB Databases:", client.list_database_names())
 except Exception as e:
