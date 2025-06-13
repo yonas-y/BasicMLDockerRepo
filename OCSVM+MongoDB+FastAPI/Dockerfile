@@ -17,5 +17,5 @@ COPY app/ app/
 # Set environment variable so Python sees /app
 ENV PYTHONPATH=/app
 
-# Default command to run your app (main.py should be inside /app)
-CMD ["python", "app/main.py"]
+EXPOSE 8000
+CMD ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]
