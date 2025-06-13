@@ -2,11 +2,24 @@
 services:
   mongo:
     image: mongo:latest
-    container_name: mongo_container
+#    container_name: mongo_ocsvm
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+
+  ocsvm_anomaly_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+#    container_name: ocsvm_app
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python app/main.py
 
 volumes:
   mongo_data:
